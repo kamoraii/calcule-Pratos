@@ -461,21 +461,24 @@
     let validated = modules.filter(m => m.validated);
     if (validated.length === 0) return;
 
-    let totalCells = 0;
+    // Calcul du nombre total de praticables
+    let totalPraticables = 0;
     validated.forEach(m => {
       let c = calc(m);
-      totalCells += c.cols * c.rows;
+      totalPraticables += c.praticables;
     });
-    
-    let baseSize = 64;
-    if (totalCells > 60) baseSize = 36;
-    else if (totalCells > 40) baseSize = 42;
-    else if (totalCells > 25) baseSize = 48;
-    else if (totalCells > 15) baseSize = 54;
-    else baseSize = 60;
-    
+
+    // Ajustement de la taille de base des cellules (zoom dynamique)
+    let baseSize = 80; // taille max pour peu de praticables
+    if (totalPraticables > 80) baseSize = 34;
+    else if (totalPraticables > 60) baseSize = 40;
+    else if (totalPraticables > 40) baseSize = 48;
+    else if (totalPraticables > 20) baseSize = 58;
+    else if (totalPraticables > 10) baseSize = 68;
+    else baseSize = 80;
+
     let cellHeight = baseSize / 2;
-    
+
     validated.forEach(m => {
       let c = calc(m);
       let block = document.createElement("div");
