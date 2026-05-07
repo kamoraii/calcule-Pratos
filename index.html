@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Plan implantation praticables">
-<meta name="theme-color" content="#f5efe6">
+<meta name="theme-color" content="#e0d3bb">
 <title>Plan implantation praticables</title>
 
 <!-- Icône (tu mets ton fichier flavicone.jpg à côté) -->
@@ -22,11 +22,11 @@
   }
 
   :root {
-    --bg: #f5efe6;
+    --bg: #e0d3bb;
     --card: #ffffff;
     --text: #1e293b;
-    --text-light: #64748b;
-    --border: #e2ded6;
+    --text-light: #5a4a2e;
+    --border: #cbbf9a;
     --accent: #5b4bdb;
     --accent2: #7b6cff;
     --green: #2ca36b;
@@ -34,7 +34,8 @@
     --danger: #d64545;
     --module: #cbd5e1;
     --moduleRiser: #4c6e9e;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    --shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.12);
     --card-radius: 20px;
   }
 
@@ -85,16 +86,23 @@
 
   .mainTitle h1 {
     margin: 8px 0 4px;
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
     letter-spacing: -0.3px;
-    word-break: break-word;
+    color: #1e3a5f;
   }
 
   .mainTitle p {
     margin: 0;
     font-size: 13px;
-    color: var(--text-light);
+    color: #5a4a2e;
+  }
+
+  .dark .mainTitle h1 {
+    color: #f1f5f9;
+  }
+  .dark .mainTitle p {
+    color: #94a3b8;
   }
 
   .card {
@@ -104,6 +112,7 @@
     padding: 16px;
     margin-bottom: 16px;
     box-shadow: var(--shadow);
+    transition: transform 0.1s, box-shadow 0.1s;
   }
 
   /* Artiste + date compact */
@@ -183,6 +192,7 @@
     display: flex;
     gap: 10px;
     margin-bottom: 12px;
+    flex-wrap: wrap;
   }
   .dimRow .fieldAB {
     flex: 1;
@@ -200,6 +210,21 @@
     color: var(--text);
   }
 
+  .info-riser {
+    background: #f0e6d2;
+    color: #5a4a2e;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin: 8px 0 0;
+    border-left: 3px solid #ff8b3d;
+  }
+  .dark .info-riser {
+    background: #2d3748;
+    color: #cbd5e1;
+    border-left-color: #ff8b3d;
+  }
+
   .grid {
     display: grid;
     gap: 3px;
@@ -207,10 +232,8 @@
     justify-content: flex-start;
   }
 
-  /* Praticable rectangle 2:1 (largeur 2x hauteur) */
+  /* Praticable rectangle 2:1 */
   .cell {
-    width: 64px;
-    height: 32px;
     background: linear-gradient(145deg, var(--module), #94a3b8);
     border-radius: 6px;
     display: flex;
@@ -240,21 +263,22 @@
   .planGlobal {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
     justify-content: flex-start;
     align-items: flex-start;
     margin-top: 12px;
+    min-height: 80px;
   }
 
   .planBlock {
-    padding: 5px;
-    background: rgba(0,0,0,0.03);
+    padding: 4px;
+    background: rgba(0,0,0,0.04);
     border-radius: 12px;
     transform-origin: top left;
   }
 
   .moduleResume {
-    background: rgba(0,0,0,0.03);
+    background: rgba(0,0,0,0.04);
     border-radius: 16px;
     padding: 12px;
     font-size: 13px;
@@ -292,14 +316,6 @@
     flex-direction: column;
     gap: 10px;
     margin-top: 18px;
-  }
-
-  @media (max-width: 550px) {
-    .cell {
-      width: 52px;
-      height: 26px;
-      font-size: 10px;
-    }
   }
 </style>
 </head>
@@ -339,14 +355,14 @@
 <div class="card" id="exportArea">
   <div class="exportHeader" style="text-align:center;">
     <div style="font-size:12px; letter-spacing:1.5px; color:var(--text-light);">PLAN D'IMPLANTATION PRATICABLES</div>
-    <h1 id="exportArtist" style="margin:6px 0 2px; font-size:26px;">—</h1>
-    <p id="exportDate" style="margin:0; font-size:12px;"></p>
+    <h1 id="exportArtist" style="margin:6px 0 2px; font-size:26px; color:#1e3a5f;">—</h1>
+    <p id="exportDate" style="margin:0; font-size:12px; color:#5a4a2e;"></p>
   </div>
   <div id="resumeModules" class="moduleResume"></div>
   <div id="planGlobal" class="planGlobal"></div>
   <div class="legend">🔴 R = Riser • Chiffre = Hauteur (cm)</div>
   <div class="commande">
-    <h2 style="font-size:18px; margin:0 0 10px;">📦 COMMANDE MATÉRIEL</h2>
+    <h2 style="font-size:18px; margin:0 0 10px;">COMMANDE MATÉRIEL</h2>
     <div id="totaux" class="big"></div>
     <div id="sucres" class="small"></div>
   </div>
@@ -450,31 +466,38 @@
   function drawGlobalPlan() {
     planGlobal.innerHTML = "";
     let validated = modules.filter(m => m.validated);
-    let totalWidth = 0, totalHeight = 0;
-    validated.forEach(m => {
-      totalWidth += parseFloat(m.A) || 0;
-      totalHeight = Math.max(totalHeight, parseFloat(m.B) || 0);
-    });
-    let scale = 1;
-    if (totalWidth > 28) scale = 28 / totalWidth;
-    if (scale < 0.4) scale = 0.4;
+    if (validated.length === 0) return;
 
+    // Calcul du nombre total de cellules pour ajuster la taille
+    let totalCells = 0;
     validated.forEach(m => {
-      let a = parseFloat(m.A) || 0;
-      let b = parseFloat(m.B) || 0;
+      let c = calc(m);
+      totalCells += c.cols * c.rows;
+    });
+    
+    // Ajustement dynamique de la taille des cellules (plus de cellules = plus petites)
+    let baseSize = 64;
+    if (totalCells > 60) baseSize = 36;
+    else if (totalCells > 40) baseSize = 42;
+    else if (totalCells > 25) baseSize = 48;
+    else if (totalCells > 15) baseSize = 54;
+    else baseSize = 60;
+    
+    let cellHeight = baseSize / 2;
+    
+    validated.forEach(m => {
       let c = calc(m);
       let block = document.createElement("div");
       block.className = "planBlock";
-      block.style.transform = `scale(${scale})`;
-      block.style.transformOrigin = "top left";
       let grid = document.createElement("div");
       grid.className = "grid";
-      grid.style.gridTemplateColumns = `repeat(${c.cols}, 64px)`;
+      grid.style.gridTemplateColumns = `repeat(${c.cols}, ${baseSize}px)`;
       for (let i = 0; i < c.cols * c.rows; i++) {
         let cell = document.createElement("div");
         cell.className = `cell ${m.R ? "riser" : ""}`;
-        cell.style.width = "64px";
-        cell.style.height = "32px";
+        cell.style.width = baseSize + "px";
+        cell.style.height = cellHeight + "px";
+        cell.style.fontSize = Math.max(9, baseSize / 5) + "px";
         cell.innerText = m.H == 0 ? "sol" : m.H;
         if (m.R) {
           let rBadge = document.createElement("div");
@@ -509,6 +532,7 @@
       }
 
       if (!m.validated) {
+        let riserInfo = m.R ? `<div class="info-riser">ℹ️ Le riser ajoute +20 cm à la hauteur totale</div>` : "";
         html += `<div class="module">
           <h3 style="margin:0 0 12px;">📌 Nouveau module</h3>
           <div class="dimRow">
@@ -534,17 +558,18 @@
               </select>
             </div>
           </div>
+          ${riserInfo}
           <div class="grid" style="grid-template-columns: repeat(${Math.max(c.cols,1)}, 64px)">
-            ${Array(Math.max(c.cols * c.rows, 1)).fill(0).map(() => `<div class="cell ${m.R ? 'riser' : ''}">${m.H == 0 ? "sol" : (m.H || "?")}${m.R ? '<div class="r">R</div>' : ''}</div>`).join("")}
+            ${Array(Math.max(c.cols * c.rows, 1)).fill(0).map(() => `<div class="cell ${m.R ? 'riser' : ''}" style="width:64px;height:32px;">${m.H == 0 ? "sol" : (m.H || "?")}${m.R ? '<div class="r">R</div>' : ''}</div>`).join("")}
           </div>
           <button class="primary" onclick="validateModule(${idx})">✓ VALIDER</button>
         </div>`;
       } else {
         html += `<div class="module">
           <h3 style="margin:0 0 8px;">✅ ${m.A} × ${m.B} — ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? "• Riser" : ""}</h3>
-          <div>🧩 ${c.praticables} praticables &nbsp;|&nbsp; 🧱 ${c.risers} risers<br><span class="small">🔗 Sucres : ${c.sucres}</span></div>
+          <div>Praticables : ${c.praticables} &nbsp;|&nbsp; Risers : ${c.risers}<br><span class="small">Sucres : ${c.sucres}</span></div>
           <div class="grid" style="grid-template-columns: repeat(${c.cols}, 64px)">
-            ${Array(c.cols * c.rows).fill(0).map(() => `<div class="cell ${m.R ? 'riser' : ''}">${m.H == 0 ? "sol" : m.H}${m.R ? '<div class="r">R</div>' : ''}</div>`).join("")}
+            ${Array(c.cols * c.rows).fill(0).map(() => `<div class="cell ${m.R ? 'riser' : ''}" style="width:64px;height:32px;">${m.H == 0 ? "sol" : m.H}${m.R ? '<div class="r">R</div>' : ''}</div>`).join("")}
           </div>
           <button class="red" onclick="removeModule(${idx})">🗑 Supprimer</button>
         </div>`;
@@ -554,11 +579,11 @@
     modulesContainer.innerHTML = html;
 
     let resumeHtml = `<b>${validatedModules.length} module${validatedModules.length > 1 ? "s" : ""} validé(s) :</b><br>`;
-    resumeHtml += validatedModules.map(m => `• ${m.A} × ${m.B} → ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? " [R]" : ""}`).join("<br>") || "Aucun module validé";
+    resumeHtml += validatedModules.map(m => `• ${m.A} × ${m.B} → ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? " (sur riser)" : ""}`).join("<br>") || "Aucun module validé";
     resumeModules.innerHTML = resumeHtml;
 
-    totaux.innerHTML = `📐 Modules : ${validatedModules.length}<br>🟩 Praticables : ${totalP}<br>🟧 Risers : ${totalR}`;
-    sucres.innerHTML = `🔸 Sucres : ${totalS}`;
+    totaux.innerHTML = `Modules : ${validatedModules.length}<br>Praticables : ${totalP}<br>Risers : ${totalR}`;
+    sucres.innerHTML = `Sucres : ${totalS}`;
 
     drawGlobalPlan();
     save();
@@ -576,7 +601,7 @@
   function copyCommande() {
     let modulesDetail = "";
     modules.filter(m => m.validated).forEach(m => {
-      modulesDetail += `${m.A} × ${m.B} → ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? "[R]" : ""}\n`;
+      modulesDetail += `${m.A} × ${m.B} → ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? "(sur riser)" : ""}\n`;
     });
     let txt = `${artistInput.value || "—"}\n${dateDisplay.innerText}\n\n${modulesDetail}\n${totaux.innerText}\n${sucres.innerText}`;
     navigator.clipboard.writeText(txt);
@@ -586,7 +611,7 @@
   function shareCommande() {
     let modulesDetail = "";
     modules.filter(m => m.validated).forEach(m => {
-      modulesDetail += `${m.A} × ${m.B} → ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? "[R]" : ""}\n`;
+      modulesDetail += `${m.A} × ${m.B} → ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? "(sur riser)" : ""}\n`;
     });
     let txt = `${artistInput.value || "—"}\n${dateDisplay.innerText}\n\n${modulesDetail}\n${totaux.innerText}\n${sucres.innerText}`;
     if (navigator.share) navigator.share({ title: "Commande praticables", text: txt }).catch(() => alert("Partage annulé"));
