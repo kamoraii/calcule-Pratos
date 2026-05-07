@@ -5,23 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#1e293b">
-<title>Plan d’implantation praticables</title>
-<link rel="icon" href="lavicon.jpg">
-<link rel="apple-touch-icon" href="lavicon.jpg">
+<meta name="apple-mobile-web-app-title" content="Praticables">
+<meta name="theme-color" content="#f1f5f9">
+<title>Praticables - Plan d'implantation</title>
+
+<!-- Icônes -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%235b4bdb'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-weight='bold'%3E📐%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%235b4bdb'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-weight='bold'%3E📐%3C/text%3E%3C/svg%3E">
+
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 <style>
   * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
-    user-select: none; /* évite le zoom texte au double-tap */
   }
 
   :root {
-    --bg: #dfe5ec;
-    --card: #f8fafc;
-    --text: #1f2937;
-    --border: #c7d0db;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --border: #e2e8f0;
     --accent: #5b4bdb;
     --accent2: #7b6cff;
     --green: #2ca36b;
@@ -29,18 +34,19 @@
     --danger: #d64545;
     --module: #cbd5e1;
     --moduleRiser: #a5b4d4;
-    --shadow: 0 8px 20px rgba(0,0,0,0.08);
-    --card-radius: 24px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --card-radius: 20px;
   }
 
   .dark {
     --bg: #0f172a;
     --card: #1e293b;
     --text: #f1f5f9;
+    --text-light: #94a3b8;
     --border: #334155;
     --module: #475569;
     --moduleRiser: #5b6e9e;
-    --shadow: 0 8px 20px rgba(0,0,0,0.5);
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
   body {
@@ -50,37 +56,45 @@
     background: var(--bg);
     color: var(--text);
     transition: background 0.2s, color 0.2s;
-    touch-action: pan-y; /* bloque le scroll horizontal + évite le pan X */
+    touch-action: pan-y;
   }
 
-  /* suppression de tout effet "zoom tactile" sur les éléments cliquables */
   button, input, select, .cell, .planBlock {
     touch-action: manipulation;
   }
 
+  /* En-tête principal */
   .mainTitle {
     text-align: center;
     margin-bottom: 16px;
-    padding: 16px;
+    padding: 16px 12px;
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--card-radius);
     box-shadow: var(--shadow);
-    backdrop-filter: blur(0px);
+  }
+
+  .mainTitle .planTitle {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-light);
   }
 
   .mainTitle h1 {
-    margin: 0;
-    font-size: 26px;
+    margin: 8px 0 4px;
+    font-size: 28px;
     font-weight: 700;
     letter-spacing: -0.3px;
     word-break: break-word;
   }
 
   .mainTitle p {
-    margin: 6px 0 0;
-    font-size: 14px;
-    opacity: 0.7;
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-light);
   }
 
   .card {
@@ -90,29 +104,41 @@
     padding: 16px;
     margin-bottom: 16px;
     box-shadow: var(--shadow);
-    transition: all 0.2s;
   }
 
-  .topInputs {
+  /* Compact row pour artiste + date */
+  .headerCompact {
     display: flex;
-    flex-direction: column;
     gap: 12px;
+    align-items: flex-end;
   }
-
-  .topInputs input {
+  .headerCompact .artistField {
+    flex: 3;
+  }
+  .headerCompact .dateField {
+    flex: 2;
+  }
+  .headerCompact input {
     width: 100%;
-    padding: 14px;
-    border-radius: 18px;
+    padding: 12px;
+    border-radius: 14px;
     border: 1px solid var(--border);
     font-size: 16px;
     background: var(--card);
     color: var(--text);
-    transition: 0.1s;
+  }
+  .headerCompact label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-bottom: 4px;
+    display: block;
   }
 
   .topBtns {
     display: flex;
     gap: 10px;
+    margin-top: 12px;
   }
 
   .topBtns button {
@@ -123,14 +149,13 @@
   button {
     border: none;
     border-radius: 40px;
-    padding: 14px;
+    padding: 12px;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
     transition: 0.1s ease;
     color: white;
     background: #475569;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     touch-action: manipulation;
   }
 
@@ -143,66 +168,75 @@
   .green { background: var(--green); }
   .orange { background: var(--orange); }
   .red { background: var(--danger); }
-  .darkBtn { background: #1e293b; box-shadow: none; }
+  .darkBtn { background: #334155; }
 
   .module {
     border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 18px;
-    margin-bottom: 20px;
-    background: rgba(255,255,255,0.03);
-    backdrop-filter: blur(2px);
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background: rgba(255,255,255,0.02);
   }
 
-  .inputs {
+  /* Grille inputs : A et B égaux, H plus petit */
+  .inputsGrid {
     display: flex;
-    flex-direction: column;
     gap: 10px;
     margin-bottom: 16px;
+    flex-wrap: wrap;
   }
-
-  .inputs input, .inputs select {
-    padding: 14px;
-    border-radius: 20px;
+  .inputsGrid .fieldAB {
+    flex: 1;
+    min-width: 100px;
+  }
+  .inputsGrid .fieldH {
+    flex: 0.6;
+    min-width: 80px;
+  }
+  .inputsGrid input, .inputsGrid select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 14px;
     border: 1px solid var(--border);
-    font-size: 16px;
+    font-size: 15px;
     background: var(--card);
     color: var(--text);
   }
 
   .grid {
     display: grid;
-    gap: 6px;
-    margin: 16px 0;
+    gap: 5px;
+    margin: 14px 0;
     justify-content: flex-start;
   }
 
+  /* Cellules dynamiques : taille normale, réduite si trop de modules => géré par JS */
   .cell {
     width: 64px;
     height: 32px;
     background: linear-gradient(145deg, var(--module), #94a3b8);
-    border-radius: 10px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 12px;
     color: #0f172a;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     position: relative;
-    transition: 0.05s linear;
+    transition: all 0.1s;
   }
   .dark .cell { color: white; text-shadow: 0 1px 1px black; }
   .cell.riser { background: linear-gradient(145deg, var(--moduleRiser), #8b9dc3); }
 
   .r {
     position: absolute;
-    left: 4px;
+    left: 3px;
     bottom: 2px;
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 800;
-    color: #ff4d4d;
-    background: rgba(0,0,0,0.3);
+    color: #ff5e5e;
+    background: rgba(0,0,0,0.4);
     padding: 0px 3px;
     border-radius: 20px;
   }
@@ -210,25 +244,25 @@
   .planGlobal {
     display: flex;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 10px;
     justify-content: flex-start;
     align-items: flex-start;
-    margin-top: 16px;
+    margin-top: 12px;
+    transition: all 0.1s;
   }
 
   .planBlock {
-    padding: 6px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 20px;
-    transition: transform 0.1s;
+    padding: 5px;
+    background: rgba(0,0,0,0.03);
+    border-radius: 14px;
     transform-origin: top left;
   }
 
   .moduleResume {
-    background: rgba(0,0,0,0.04);
-    border-radius: 20px;
-    padding: 14px;
-    font-size: 14px;
+    background: rgba(0,0,0,0.03);
+    border-radius: 16px;
+    padding: 12px;
+    font-size: 13px;
     line-height: 1.5;
     margin: 12px 0;
   }
@@ -236,24 +270,24 @@
   .legend {
     margin: 12px 0;
     font-size: 11px;
-    opacity: 0.7;
+    opacity: 0.65;
     text-align: center;
   }
 
   .commande {
     margin-top: 16px;
     padding-top: 16px;
-    border-top: 2px solid var(--border);
+    border-top: 1px solid var(--border);
   }
 
   .big {
-    font-size: 20px;
-    font-weight: 800;
-    line-height: 1.5;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
   }
 
   .small {
-    font-size: 12px;
+    font-size: 11px;
     opacity: 0.6;
     margin-top: 6px;
   }
@@ -261,8 +295,8 @@
   .exportBtns {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 20px;
+    gap: 10px;
+    margin-top: 18px;
   }
 
   @media (max-width: 550px) {
@@ -271,36 +305,35 @@
       height: 28px;
       font-size: 11px;
     }
-    .planBlock {
-      transform-origin: top left;
-    }
-    .big {
-      font-size: 18px;
+    .inputsGrid .fieldH {
+      flex: 0.8;
     }
   }
-
-  /* suppression du bug scroll X */
-  body, html { overflow-x: hidden; }
-  .planGlobal { max-width: 100%; }
-  img, canvas { max-width: 100%; }
 </style>
 </head>
 <body>
 
 <div class="mainTitle">
+  <div class="planTitle">PLAN D'IMPLANTATION</div>
   <h1 id="artistDisplay">—</h1>
   <p id="dateDisplay"></p>
 </div>
 
 <div class="card">
-  <div class="topInputs">
-    <input id="artistInput" placeholder="Artiste / Groupe">
-    <input id="dateInput" type="date">
-    <div class="topBtns">
-      <button class="primary" onclick="lockHeader()">✓ Valider</button>
-      <button class="orange" onclick="unlockHeader()">✎ Modifier</button>
-      <button class="darkBtn" onclick="toggleTheme()">🌙 Nuit</button>
+  <div class="headerCompact">
+    <div class="artistField">
+      <label>Artiste / Groupe</label>
+      <input id="artistInput" placeholder="Nom de l'artiste">
     </div>
+    <div class="dateField">
+      <label>Date</label>
+      <input id="dateInput" type="date">
+    </div>
+  </div>
+  <div class="topBtns">
+    <button class="primary" onclick="lockHeader()">✓ Valider</button>
+    <button class="orange" onclick="unlockHeader()">✎ Modifier</button>
+    <button class="darkBtn" onclick="toggleTheme()">🌙 Nuit</button>
   </div>
 </div>
 
@@ -313,15 +346,15 @@
 
 <div class="card" id="exportArea">
   <div class="exportHeader" style="text-align:center;">
-    <h2 style="margin:0 0 6px;">PLAN D’IMPLANTATION PRATICABLES</h2>
-    <h1 id="exportArtist" style="margin:4px 0;">—</h1>
-    <p id="exportDate" style="margin:0;"></p>
+    <div style="font-size:12px; letter-spacing:1.5px; color:var(--text-light);">PLAN D'IMPLANTATION</div>
+    <h1 id="exportArtist" style="margin:6px 0 2px; font-size:26px;">—</h1>
+    <p id="exportDate" style="margin:0; font-size:12px;"></p>
   </div>
   <div id="resumeModules" class="moduleResume"></div>
   <div id="planGlobal" class="planGlobal"></div>
-  <div class="legend">🔴 R → Riser • Chiffre → Hauteur (cm)</div>
+  <div class="legend">🔴 R = Riser • Chiffre = Hauteur (cm)</div>
   <div class="commande">
-    <h2>📦 COMMANDE MATÉRIEL</h2>
+    <h2 style="font-size:18px; margin:0 0 10px;">📦 COMMANDE MATÉRIEL</h2>
     <div id="totaux" class="big"></div>
     <div id="sucres" class="small"></div>
   </div>
@@ -337,25 +370,25 @@
   let modulesContainer, artistInput, dateInput, artistDisplay, dateDisplay, exportArtist, exportDate, resumeModules, totaux, sucres, planGlobal;
 
   function save() {
-    localStorage.setItem("modules", JSON.stringify(modules));
-    localStorage.setItem("artist", artistInput.value);
-    localStorage.setItem("date", dateInput.value);
-    localStorage.setItem("theme", document.body.classList.contains("dark"));
+    localStorage.setItem("praticables_modules", JSON.stringify(modules));
+    localStorage.setItem("praticables_artist", artistInput.value);
+    localStorage.setItem("praticables_date", dateInput.value);
+    localStorage.setItem("praticables_theme", document.body.classList.contains("dark"));
   }
 
   function load() {
-    let savedModules = localStorage.getItem("modules");
+    let savedModules = localStorage.getItem("praticables_modules");
     modules = savedModules ? JSON.parse(savedModules) : [];
-    artistInput.value = localStorage.getItem("artist") || "";
-    dateInput.value = localStorage.getItem("date") || "";
-    if (localStorage.getItem("theme") === "true") document.body.classList.add("dark");
+    artistInput.value = localStorage.getItem("praticables_artist") || "";
+    dateInput.value = localStorage.getItem("praticables_date") || "";
+    if (localStorage.getItem("praticables_theme") === "true") document.body.classList.add("dark");
     render();
   }
 
   function toggleTheme() {
     document.body.classList.toggle("dark");
     save();
-    render(); // rafraîchit couleurs
+    render();
   }
 
   function lockHeader() {
@@ -371,7 +404,7 @@
 
   function addModule() {
     if (modules.some(m => !m.validated)) {
-      alert("Veuillez valider ou supprimer le module en cours d'édition");
+      alert("Veuillez valider ou supprimer le module en cours");
       return;
     }
     modules.unshift({ A: "", B: "", H: "", R: false, validated: false });
@@ -392,7 +425,7 @@
   function validateModule(i) {
     let m = modules[i];
     if (!m.A || !m.B || !m.H || parseFloat(m.A) <= 0 || parseFloat(m.B) <= 0 || parseFloat(m.H) <= 0) {
-      alert("Remplissez A, B et Hauteur avec des valeurs > 0");
+      alert("Remplissez A, B et Hauteur > 0");
       return;
     }
     modules[i].validated = true;
@@ -413,24 +446,26 @@
 
   function drawGlobalPlan() {
     planGlobal.innerHTML = "";
+    let validatedCount = modules.filter(m => m.validated).length;
+    // Réduction cell size si beaucoup de modules (max 5-6, mais sécurité)
+    let cellSize = 64;
+    if (validatedCount >= 6) cellSize = 52;
+    if (validatedCount >= 8) cellSize = 44;
+    
     modules.forEach(m => {
       if (!m.validated) return;
       let c = calc(m);
-      let totalCells = c.cols * c.rows;
-      let scale = 1;
-      if (totalCells > 30) scale = 0.7;
-      else if (totalCells > 20) scale = 0.8;
-      else if (totalCells > 12) scale = 0.9;
-
       let block = document.createElement("div");
       block.className = "planBlock";
-      block.style.transform = `scale(${scale})`;
       let grid = document.createElement("div");
       grid.className = "grid";
-      grid.style.gridTemplateColumns = `repeat(${c.cols}, 64px)`;
+      grid.style.gridTemplateColumns = `repeat(${c.cols}, ${cellSize}px)`;
       for (let i = 0; i < c.cols * c.rows; i++) {
         let cell = document.createElement("div");
         cell.className = `cell ${m.R ? "riser" : ""}`;
+        cell.style.width = cellSize + "px";
+        cell.style.height = (cellSize/2) + "px";
+        cell.style.fontSize = (cellSize/5) + "px";
         cell.innerText = m.H;
         if (m.R) {
           let rBadge = document.createElement("div");
@@ -443,18 +478,6 @@
       block.appendChild(grid);
       planGlobal.appendChild(block);
     });
-    // ajustement responsive des cellules dans le plan global
-    if (window.innerWidth < 550) {
-      document.querySelectorAll('.planBlock .grid').forEach(g => {
-        let cols = getComputedStyle(g).gridTemplateColumns.split(" ").length;
-        if (cols) g.style.gridTemplateColumns = `repeat(${cols}, 52px)`;
-      });
-    } else {
-      document.querySelectorAll('.planBlock .grid').forEach(g => {
-        let cols = getComputedStyle(g).gridTemplateColumns.split(" ").length;
-        if (cols) g.style.gridTemplateColumns = `repeat(${cols}, 64px)`;
-      });
-    }
   }
 
   function render() {
@@ -478,15 +501,15 @@
 
       if (!m.validated) {
         html += `<div class="module">
-          <h3>📌 Nouveau module</h3>
-          <div class="inputs">
-            <input placeholder="Dimension A (mètres)" value="${m.A}" onchange="update(${idx},'A',this.value)">
-            <input placeholder="Dimension B (mètres)" value="${m.B}" onchange="update(${idx},'B',this.value)">
-            <input placeholder="Hauteur (cm)" value="${m.H}" onchange="update(${idx},'H',this.value)">
-            <select onchange="update(${idx},'R',this.value==='true')">
+          <h3 style="margin:0 0 12px;">📌 Nouveau module</h3>
+          <div class="inputsGrid">
+            <div class="fieldAB"><input placeholder="A (mètres)" value="${m.A}" onchange="update(${idx},'A',this.value)"></div>
+            <div class="fieldAB"><input placeholder="B (mètres)" value="${m.B}" onchange="update(${idx},'B',this.value)"></div>
+            <div class="fieldH"><input placeholder="H (cm)" value="${m.H}" onchange="update(${idx},'H',this.value)"></div>
+            <div class="fieldAB"><select onchange="update(${idx},'R',this.value==='true')">
               <option value="false" ${!m.R ? "selected" : ""}>Sans Riser</option>
               <option value="true" ${m.R ? "selected" : ""}>Avec Riser</option>
-            </select>
+            </select></div>
           </div>
           <div class="grid" style="grid-template-columns: repeat(${Math.max(c.cols,1)}, 64px)">
             ${Array(Math.max(c.cols * c.rows, 1)).fill(0).map(() => `<div class="cell ${m.R ? 'riser' : ''}">${m.H || "?"}${m.R ? '<div class="r">R</div>' : ''}</div>`).join("")}
@@ -495,23 +518,24 @@
         </div>`;
       } else {
         html += `<div class="module">
-          <h3>✅ ${m.A} × ${m.B} — ${m.H} cm ${m.R ? "• Riser •" : ""}</h3>
-          <div>🧩 Praticables : ${c.praticables} &nbsp;|&nbsp; 🧱 Risers : ${c.risers}<br><span class="small">🔗 Sucres : ${c.sucres}</span></div>
+          <h3 style="margin:0 0 8px;">✅ ${m.A} × ${m.B} — ${m.H} cm ${m.R ? "• Riser" : ""}</h3>
+          <div>🧩 ${c.praticables} praticables &nbsp;|&nbsp; 🧱 ${c.risers} risers<br><span class="small">🔗 Sucres : ${c.sucres}</span></div>
           <div class="grid" style="grid-template-columns: repeat(${c.cols}, 64px)">
             ${Array(c.cols * c.rows).fill(0).map(() => `<div class="cell ${m.R ? 'riser' : ''}">${m.H}${m.R ? '<div class="r">R</div>' : ''}</div>`).join("")}
           </div>
-          <button class="red" onclick="removeModule(${idx})">🗑 Supprimer ce module</button>
+          <button class="red" onclick="removeModule(${idx})">🗑 Supprimer</button>
         </div>`;
       }
     });
 
     modulesContainer.innerHTML = html;
 
-    resumeModules.innerHTML = `<b>${validatedModules.length} module${validatedModules.length > 1 ? "s" : ""} validé(s) :</b><br>` +
-      validatedModules.map(m => `• ${m.A} × ${m.B} → ${m.H} cm ${m.R ? " [R]" : ""}`).join("<br>") || "Aucun module validé";
+    let resumeHtml = `<b>${validatedModules.length} module${validatedModules.length > 1 ? "s" : ""} validé(s) :</b><br>`;
+    resumeHtml += validatedModules.map(m => `• ${m.A} × ${m.B} → ${m.H} cm ${m.R ? " [R]" : ""}`).join("<br>") || "Aucun module validé";
+    resumeModules.innerHTML = resumeHtml;
 
     totaux.innerHTML = `📐 Modules : ${validatedModules.length}<br>🟩 Praticables : ${totalP}<br>🟧 Risers : ${totalR}`;
-    sucres.innerHTML = `🔸 Sucres (colliers) : ${totalS}`;
+    sucres.innerHTML = `🔸 Sucres : ${totalS}`;
 
     drawGlobalPlan();
     save();
@@ -520,26 +544,34 @@
   function exportPNG() {
     html2canvas(document.getElementById("exportArea"), { scale: 2, backgroundColor: null }).then(canvas => {
       let link = document.createElement("a");
-      link.download = "plan-praticables.png";
+      link.download = "plan_praticables.png";
       link.href = canvas.toDataURL();
       link.click();
-    }).catch(err => alert("Erreur capture : " + err));
+    }).catch(() => alert("Erreur capture"));
   }
 
   function copyCommande() {
-    let txt = `${artistInput.value || "—"}\n${dateDisplay.innerText}\n\nPLAN D'IMPLANTATION\n${resumeModules.innerText}\n${totaux.innerText}\n${sucres.innerText}`;
+    let modulesDetail = "";
+    modules.filter(m => m.validated).forEach(m => {
+      modulesDetail += `${m.A} × ${m.B} → ${m.H} cm ${m.R ? "[R]" : ""}\n`;
+    });
+    let txt = `${artistInput.value || "—"}\n${dateDisplay.innerText}\n\nPLAN D'IMPLANTATION\n${modulesDetail}\n${totaux.innerText}\n${sucres.innerText}`;
     navigator.clipboard.writeText(txt);
     alert("✅ Commande copiée");
   }
 
   function shareCommande() {
-    let txt = `${artistInput.value}\n${dateDisplay.innerText}\n${totaux.innerText}\n${sucres.innerText}`;
+    let modulesDetail = "";
+    modules.filter(m => m.validated).forEach(m => {
+      modulesDetail += `${m.A} × ${m.B} → ${m.H} cm ${m.R ? "[R]" : ""}\n`;
+    });
+    let txt = `${artistInput.value || "—"}\n${dateDisplay.innerText}\n\n${modulesDetail}\n${totaux.innerText}\n${sucres.innerText}`;
     if (navigator.share) navigator.share({ title: "Commande praticables", text: txt }).catch(() => alert("Partage annulé"));
-    else alert("Partage non supporté sur ce navigateur");
+    else alert("Partage non supporté");
   }
 
   function resetAll() {
-    if (!confirm("⚠️ Tout effacer ? Modules, artiste, date… irrémédiable.")) return;
+    if (!confirm("⚠️ Tout effacer ? Modules, artiste, date…")) return;
     modules = [];
     artistInput.value = "";
     dateInput.value = "";
