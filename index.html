@@ -35,7 +35,6 @@
     --module: #cbd5e1;
     --moduleRiser: #4c6e9e;
     --shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-    --shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.12);
     --card-radius: 20px;
   }
 
@@ -64,7 +63,6 @@
     touch-action: manipulation;
   }
 
-  /* En-tête principal */
   .mainTitle {
     text-align: center;
     margin-bottom: 16px;
@@ -112,10 +110,8 @@
     padding: 16px;
     margin-bottom: 16px;
     box-shadow: var(--shadow);
-    transition: transform 0.1s, box-shadow 0.1s;
   }
 
-  /* Artiste + date compact */
   .compactRow {
     display: flex;
     gap: 12px;
@@ -187,7 +183,6 @@
     background: rgba(255,255,255,0.02);
   }
 
-  /* Saisie dimensions */
   .dimRow {
     display: flex;
     gap: 10px;
@@ -232,7 +227,6 @@
     justify-content: flex-start;
   }
 
-  /* Praticable rectangle 2:1 */
   .cell {
     background: linear-gradient(145deg, var(--module), #94a3b8);
     border-radius: 6px;
@@ -377,7 +371,6 @@
   let modules = [];
   let modulesContainer, artistInput, dateInput, artistDisplay, dateDisplay, exportArtist, exportDate, resumeModules, totaux, sucres, planGlobal;
 
-  // Valeurs pour selects
   const aOptions = [1,2,3,4,5,6,7,8,9,10,12,14,16,18,20,25,30];
   const hOptions = [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200];
 
@@ -468,14 +461,12 @@
     let validated = modules.filter(m => m.validated);
     if (validated.length === 0) return;
 
-    // Calcul du nombre total de cellules pour ajuster la taille
     let totalCells = 0;
     validated.forEach(m => {
       let c = calc(m);
       totalCells += c.cols * c.rows;
     });
     
-    // Ajustement dynamique de la taille des cellules (plus de cellules = plus petites)
     let baseSize = 64;
     if (totalCells > 60) baseSize = 36;
     else if (totalCells > 40) baseSize = 42;
@@ -579,7 +570,8 @@
     modulesContainer.innerHTML = html;
 
     let resumeHtml = `<b>${validatedModules.length} module${validatedModules.length > 1 ? "s" : ""} validé(s) :</b><br>`;
-    resumeHtml += validatedModules.map(m => `• ${m.A} × ${m.B} → ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? " (sur riser)" : ""}`).join("<br>") || "Aucun module validé";
+    resumeHtml += validatedModules.map(m => `• ${m.A} × ${m.B} → ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? " (sur riser)" : ""}`).join("<br>");
+    if (validatedModules.length === 0) resumeHtml += "Aucun module validé";
     resumeModules.innerHTML = resumeHtml;
 
     totaux.innerHTML = `Modules : ${validatedModules.length}<br>Praticables : ${totalP}<br>Risers : ${totalR}`;
@@ -601,9 +593,10 @@
   function copyCommande() {
     let modulesDetail = "";
     modules.filter(m => m.validated).forEach(m => {
-      modulesDetail += `${m.A} × ${m.B} → ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? "(sur riser)" : ""}\n`;
+      modulesDetail += `${m.A} × ${m.B} → ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? "(sur riser)" : ""}\n\n`;
     });
-    let txt = `${artistInput.value || "—"}\n${dateDisplay.innerText}\n\n${modulesDetail}\n${totaux.innerText}\n${sucres.innerText}`;
+    let recap = `\n\nModules : ${modules.filter(m => m.validated).length}\nPraticables : ${document.getElementById("totaux").innerText.split("\n")[1]?.replace("Praticables : ", "") || "0"}\nRisers : ${document.getElementById("totaux").innerText.split("\n")[2]?.replace("Risers : ", "") || "0"}\nSucres : ${document.getElementById("sucres").innerText.replace("Sucres : ", "") || "0"}`;
+    let txt = `${artistInput.value || "—"}\n${dateDisplay.innerText}\n\n${modulesDetail}${recap}`;
     navigator.clipboard.writeText(txt);
     alert("✅ Commande copiée");
   }
@@ -611,9 +604,10 @@
   function shareCommande() {
     let modulesDetail = "";
     modules.filter(m => m.validated).forEach(m => {
-      modulesDetail += `${m.A} × ${m.B} → ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? "(sur riser)" : ""}\n`;
+      modulesDetail += `${m.A} × ${m.B} → ${m.H == 0 ? "sol" : (m.H + " cm")} ${m.R ? "(sur riser)" : ""}\n\n`;
     });
-    let txt = `${artistInput.value || "—"}\n${dateDisplay.innerText}\n\n${modulesDetail}\n${totaux.innerText}\n${sucres.innerText}`;
+    let recap = `\n\nModules : ${modules.filter(m => m.validated).length}\nPraticables : ${document.getElementById("totaux").innerText.split("\n")[1]?.replace("Praticables : ", "") || "0"}\nRisers : ${document.getElementById("totaux").innerText.split("\n")[2]?.replace("Risers : ", "") || "0"}\nSucres : ${document.getElementById("sucres").innerText.replace("Sucres : ", "") || "0"}`;
+    let txt = `${artistInput.value || "—"}\n${dateDisplay.innerText}\n\n${modulesDetail}${recap}`;
     if (navigator.share) navigator.share({ title: "Commande praticables", text: txt }).catch(() => alert("Partage annulé"));
     else alert("Partage non supporté");
   }
